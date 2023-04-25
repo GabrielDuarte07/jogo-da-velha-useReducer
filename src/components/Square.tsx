@@ -1,5 +1,9 @@
 import { ReactElement, useContext } from "react";
-import { gameContext, GameContextType } from "../contexts/GameContext";
+import {
+  gameContext,
+  GameContextType,
+  ValidActions,
+} from "../contexts/GameContext";
 
 type SquareProps = {
   value: string;
@@ -8,13 +12,8 @@ type SquareProps = {
 
 const Square = ({ value, index }: SquareProps): ReactElement => {
   const {
-    squares,
-    setSquares,
-    isXNext,
-    setIsXNext,
-    whoIsWinner,
-    history,
-    setHistory,
+    state: { squares, isXNext, whoIsWinner },
+    dispatch,
   } = useContext<GameContextType | null>(gameContext) as GameContextType;
 
   const handleClick = (): void => {
@@ -22,16 +21,12 @@ const Square = ({ value, index }: SquareProps): ReactElement => {
     const newSquares = [...squares];
     if (newSquares[index]) return;
     newSquares[index] = isXNext ? "X" : "O";
-    setSquares(newSquares);
-    setIsXNext(!isXNext);
-    setHistory([
-      ...history,
-      {
-        squares: [...squares],
-        player: isXNext ? "O" : "X",
+    dispatch({
+      type: ValidActions.UPDATE_SQUARES,
+      payload: {
+        squares: newSquares,
       },
-    ]);
-    console.log(history);
+    });
   };
 
   return (

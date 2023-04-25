@@ -1,5 +1,9 @@
 import { ReactElement, useContext, useEffect } from "react";
-import { gameContext, GameContextType } from "../contexts/GameContext";
+import {
+  gameContext,
+  GameContextType,
+  ValidActions,
+} from "../contexts/GameContext";
 import { v4 as uuid } from "uuid";
 import Player from "./Player";
 import Square from "./Square";
@@ -9,13 +13,18 @@ import History from "./History";
 import calculateWinner from "../utils/calculateWinner";
 
 const Board = (): ReactElement => {
-  const { squares, setWhoIsWinner } = useContext<GameContextType | null>(
-    gameContext
-  ) as GameContextType;
+  const {
+    state: { squares },
+    dispatch,
+  } = useContext<GameContextType | null>(gameContext) as GameContextType;
 
   useEffect(() => {
     const winner = calculateWinner(squares);
-    if (winner) setWhoIsWinner(winner);
+    if (winner)
+      dispatch({
+        type: ValidActions.UPDATE_WINNER,
+        payload: { whoIsWinner: winner },
+      });
   }, [squares]);
   return (
     <div className="boardContainer">

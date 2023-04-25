@@ -1,15 +1,17 @@
-import { useContext } from "react";
-import { gameContext, GameContextType } from "../contexts/GameContext";
+import { ReactElement, useContext } from "react";
+import {
+  gameContext,
+  GameContextType,
+  ValidActions,
+} from "../contexts/GameContext";
 
-const Reset = () => {
-  const { setSquares, setIsXNext, setWhoIsWinner, setHistory } =
-    useContext<GameContextType | null>(gameContext) as GameContextType;
+const Reset = (): ReactElement => {
+  const { dispatch } = useContext<GameContextType | null>(
+    gameContext
+  ) as GameContextType;
 
   const handleClick = (): void => {
-    setSquares(Array(9).fill(null));
-    setIsXNext(true);
-    setWhoIsWinner(null);
-    setHistory([]);
+    dispatch({ type: ValidActions.RESET, payload: {} });
   };
 
   return (
